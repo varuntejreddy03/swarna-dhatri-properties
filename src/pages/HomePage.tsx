@@ -254,6 +254,31 @@ export const HomePage: React.FC = () => {
             Full NIMZ dossier <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+
+        {/* Quick NIMZ Metrics Highlight */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-4 bg-white border border-[#E8E4DF] rounded-lg">
+            <span className="text-xl sm:text-2xl font-serif font-bold text-[#B8860B]">12,635+</span>
+            <span className="block text-xs font-semibold text-[#2D2D2D] mt-0.5">Acres Mega-Zone</span>
+            <span className="block text-[11px] text-gray-500">Nyalkal & Jharasangam</span>
+          </div>
+          <div className="p-4 bg-white border border-[#E8E4DF] rounded-lg">
+            <span className="text-xl sm:text-2xl font-serif font-bold text-[#2D2D2D]">3,245</span>
+            <span className="block text-xs font-semibold text-[#2D2D2D] mt-0.5">Phase 1 Priority</span>
+            <span className="block text-[11px] text-gray-500">Under active development</span>
+          </div>
+          <div className="p-4 bg-white border border-[#E8E4DF] rounded-lg">
+            <span className="text-xl sm:text-2xl font-serif font-bold text-[#4A7C59]">2.6+ Lakh</span>
+            <span className="block text-xs font-semibold text-[#2D2D2D] mt-0.5">Jobs Projected</span>
+            <span className="block text-[11px] text-gray-500">Automotive, EV & ESDM</span>
+          </div>
+          <div className="p-4 bg-white border border-[#E8E4DF] rounded-lg">
+            <span className="text-xl sm:text-2xl font-serif font-bold text-[#B8860B]">₹38,000+ Cr</span>
+            <span className="block text-xs font-semibold text-[#2D2D2D] mt-0.5">Target Investment</span>
+            <span className="block text-[11px] text-gray-500">Govt & private anchors</span>
+          </div>
+        </div>
+
         <GoldenCorridorMap />
       </section>
 
