@@ -5,13 +5,13 @@ export const FAQS: FaqItem[] = [
     id: "booking-amount",
     category: "booking",
     question: "What is the token booking amount to reserve a plot?",
-    answer: "You can reserve any available plot in Swarna Bindu Avenue-2 with an initial token amount of just ₹20,000. Upon payment, your chosen plot number is immediately locked and removed from public inventory."
+    answer: "You can reserve any available plot in Swarna Bindu Avenue (Phase 1 or Phase 2) with a booking amount of just ₹20,000. Upon payment, your chosen plot number is immediately locked and removed from public inventory. The ₹1,50,000 down payment follows within 10 days of booking."
   },
   {
     id: "spot-registration",
     category: "legal",
     question: "When is the official legal plot registration executed?",
-    answer: "We guarantee instant Spot Registration at the Sub-Registrar Office upon payment of 50% of the total plot consideration value. The remaining 50% can be structured via convenient, flexible monthly EMI installments."
+    answer: "Registration can be done on payment of 50% of the plot value within 10 days of booking (for example ₹2,00,000 on a 121 sq.yd plot at ₹3,300 per sq.yd, whose total is ₹3,99,300). Alternatively, pay ₹20,000 booking plus ₹1,50,000 down payment within 10 days and clear the balance through EMI."
   },
   {
     id: "lrs-charges",
@@ -23,7 +23,7 @@ export const FAQS: FaqItem[] = [
     id: "emi-facility",
     category: "emi",
     question: "What financing and EMI options are available?",
-    answer: "We provide structured, highly flexible in-house and bank payment plans customized for both salaried professionals and business families. Our financial concierge calculates transparent amortization schedules with zero prepayment penalties."
+    answer: "After the ₹20,000 booking and the ₹1,50,000 down payment (within 10 days), the balance can be paid in monthly EMIs. EMI is available for a maximum of 24 months only. For a 121 sq.yd plot at ₹3,300 per sq.yd (total ₹3,99,300), the balance of ₹2,29,300 can be spread over up to 24 months. Our team will share the exact schedule in writing."
   },
   {
     id: "tuesday-visiting",
@@ -87,7 +87,7 @@ export const TRUST_VAULT_ITEMS: DocumentTrustItem[] = [
   {
     id: "layout-survey-map",
     title: "Demarcated CAD Survey & Boundary Map",
-    description: "Certified total station survey plan documenting exact coordinates, 33' & 30' road widths, and individual plot dimensions.",
+    description: "Certified total station survey plan documenting exact coordinates, 30' road widths, and individual plot dimensions.",
     status: "verified",
     statusNote: "Physical Boundary Kerb Stones Fixed On-Site",
     badge: "Total Station Surveyed"

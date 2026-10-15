@@ -21,8 +21,19 @@ This document lists all placeholder values, marketing flyer discrepancies, and r
 ---
 
 ### 3. Physical Layout & Road Widths
-- [ ] **Exact Road Widths**: Flyer notes "33×30 ft roads". Confirm whether the main spine is 33 ft and internal cross-streets are 30 ft, or if 40-ft approach roads exist.
-- [ ] **Survey / CAD Plot Layout**: `src/data/plots.sample.ts` currently provides 42 realistic sample plots (150–300 sq.yd) for interactive demonstration. Client should supply final approved plot numbering and dimension blueprint to replace sample coordinates.
+- [x] **Road widths**: Updated to **30 ft** everywhere (both layout sheets show "30' Wide Road"). The earlier "33 ft" mentions were removed.
+- [x] **Survey / CAD Plot Layout**: The explorer now shows the real Phase 1 and Phase 2 layout sheets (`public/layouts/`), with plot numbers and areas read from the PDFs (`src/data/layoutPlots.generated.ts`).
+- [ ] **Phase 2 sheet inconsistencies** (reproduced as drawn, please confirm): the sheet says *237 plots* and a plotted area of *29,936 sq.yd*, but it carries **244 plot labels** whose areas add up to **29,665 sq.yd**. Plot number **91 appears twice** (areas 113 and 224), number **224 is missing**, and there is one **91/1** (154 sq.yd). Numbers run up to 243.
+- [ ] **Acreage**: The sheets give Phase 1 = Ac 2-00 (9,678.94 sq.yd, 52 plots) and Phase 2 = Ac 9.20 (45,270 sq.yd). Marketing copy elsewhere still says "50 Acres" — confirm whether that is the wider township and update the copy if not.
+- [ ] **Facing / corner flags**: The sheets don't print facing. It is derived from the road-frontage side drawn on each plot (Phase 1: plots on the west column and the right-hand column face West, the middle column faces East — matching the ₹4,500 East / ₹4,000 West rates). Corner plots on Phase 1 are 1, 22, 23, 45, 46. Please verify.
+- [ ] **Live inventory**: all plots show as *available* until statuses are entered in `src/data/plotStatus.ts`.
+
+---
+
+### 3b. Payment terms (new)
+- [ ] Booking **₹20,000**; down payment **₹1,50,000 within 10 days**; balance in EMI for a **maximum of 24 months**; or **50% registration within 10 days** (₹2,00,000 on the 121 sq.yd × ₹3,300 = ₹3,99,300 example). Terms live in `src/data/paymentPlan.ts`.
+- [ ] Confirm whether the ₹1,50,000 down payment **includes** the ₹20,000 booking (the site currently treats them as separate: ₹1,70,000 upfront).
+- [ ] Confirm whether the ₹1,50,000 down payment is the same for every plot size, and whether the EMI carries **interest** (the calculator defaults to 0% with a slider; the plot panel shows balance ÷ 24).
 
 ---
 

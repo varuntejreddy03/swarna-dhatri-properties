@@ -5,6 +5,7 @@ import { FAQS } from '../data/faqs';
 import { COMPANY } from '../data/company';
 import { PlotExplorer } from '../components/PlotExplorer';
 import { EmiCalculator } from '../components/EmiCalculator';
+import { PaymentPlan } from '../components/PaymentPlan';
 import { GoldenCorridorMap } from '../components/GoldenCorridorMap';
 import { NimzTimeline } from '../components/NimzTimeline';
 import { CouponReveal } from '../components/CouponReveal';
@@ -34,7 +35,7 @@ import { getWhatsAppGeneralInquiryUrl } from '../utils/whatsapp';
 export const HomePage: React.FC = () => {
   const amenitiesList = [
     { title: "Grand Entrance Arch", desc: "40-ft architectural gateway with 24/7 security cabin", icon: Building2 },
-    { title: "33 & 30 Ft Boulevards", desc: "Wide internal roads with precast kerbing and integrated drains", icon: Compass },
+    { title: "30 Ft Wide Roads", desc: "Wide internal roads with precast kerbing and integrated drains", icon: Compass },
     { title: "Red Sandalwood Plantation", desc: "High-yield Pterocarpus santalinus along boundaries for long-term wealth", icon: Trees },
     { title: "3-Phase Power Supply", desc: "Dedicated transformer and illuminated street poles throughout", icon: Zap },
     { title: "Borewell & Water Network", desc: "Deep water source with underground distribution pipelines", icon: Droplets },
@@ -45,8 +46,8 @@ export const HomePage: React.FC = () => {
     { step: "01", title: "Advisory & Selection", desc: "Review available plots, road widths, and Vastu facings with our team." },
     { step: "02", title: "Site Visit", desc: "Tour the 50-acre layout. Free AC pickup from Miyapur (Wed–Mon)." },
     { step: "03", title: "Ground Survey", desc: "Inspect corner stones, boulevards, and red sandalwood on-site." },
-    { step: "04", title: "Reserve with ₹20,000", desc: "Lock your chosen plot with a token advance and claim your privilege." },
-    { step: "05", title: "50% Spot Registration", desc: "Instant deed registration. Structure the balance via flexible EMI." }
+    { step: "04", title: "Book with ₹20,000", desc: "Lock your chosen plot with a token advance and claim your privilege." },
+    { step: "05", title: "Down Payment or 50% Registration", desc: "Pay ₹1,50,000 within 10 days and clear the balance in up to 24 EMIs, or pay 50% within 10 days and register." }
   ];
 
   return (
@@ -148,13 +149,13 @@ export const HomePage: React.FC = () => {
 
                 <div className="space-y-3 pt-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Plot sizes</span>
-                    <span className="text-white font-medium">150–400 sq. yards</span>
+                    <span className="text-gray-400">Standard plot</span>
+                    <span className="text-white font-medium">120 sq. yards</span>
                   </div>
                   <div className="h-px bg-gray-700" />
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Road widths</span>
-                    <span className="text-white font-medium">33 & 30 ft</span>
+                    <span className="text-white font-medium">30 ft</span>
                   </div>
                   <div className="h-px bg-gray-700" />
                   <div className="flex justify-between text-sm">
@@ -173,7 +174,7 @@ export const HomePage: React.FC = () => {
                   to="/plot-explorer"
                   className="w-full flex items-center justify-center gap-2 py-3 bg-[#B8860B] hover:bg-[#96690A] text-white rounded-lg font-medium text-sm transition-colors"
                 >
-                  <span>Open Masterplan Explorer</span>
+                  <span>Open Layout Plan Explorer</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -192,7 +193,7 @@ export const HomePage: React.FC = () => {
               { value: "₹20,000", label: "Token Advance" },
               { value: "50% Spot", label: "Registration" },
               { value: "₹0 LRS", label: "Company Paid" },
-              { value: "Custom EMI", label: "Flexible Plans" }
+              { value: "24-Month EMI", label: "On the Balance" }
             ].map((item, idx) => (
               <div key={idx} className="p-4 sm:p-5 text-center">
                 <div className="text-lg sm:text-xl font-serif font-semibold text-[#2D2D2D]">{item.value}</div>
@@ -226,14 +227,19 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* ─── PAYMENT PLAN ─── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 mt-20">
+        <PaymentPlan />
+      </section>
+
       {/* ─── MASTERPLAN EXPLORER ─── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 mt-20 space-y-6">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-[#2D2D2D]">
-            Masterplan Explorer
+            Layout Plan Explorer
           </h2>
           <p className="text-sm text-gray-500 mt-2">
-            Filter by facing, corner positions, or budget. Click any plot to preview dimensions and EMI plans.
+            The approved Phase 1 and Phase 2 layout plans, exactly as drawn. Filter by facing, corner positions, or budget and click any plot to see its price and payment plan.
           </p>
         </div>
         <PlotExplorer />

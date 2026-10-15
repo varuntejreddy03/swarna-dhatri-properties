@@ -20,13 +20,13 @@ export const GalleryPage: React.FC = () => {
       id: 2,
       title: "Grand Entrance Arch & Security Gate",
       category: "amenities",
-      caption: "Secured main layout entrance structure along the 33-ft connecting highway road.",
+      caption: "Secured main layout entrance structure along the connecting approach road.",
       imageUrl: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=1200&q=80",
       badge: "Architectural Entryway"
     },
     {
       id: 3,
-      title: "33-Ft & 30-Ft Internal Boulevards with Kerbing",
+      title: "30-Ft Wide Internal Roads with Kerbing",
       category: "amenities",
       caption: "Compacted engineered road network with precast kerbing stones installed along plot boundaries.",
       imageUrl: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",

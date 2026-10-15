@@ -2,9 +2,14 @@ export type Facing = 'East' | 'West' | 'North' | 'South' | 'North-East' | 'North
 
 export type PlotStatus = 'available' | 'booked' | 'hold';
 
+export type PhaseId = 'avenue-1' | 'avenue-2';
+
 export interface Plot {
+  /** Unique across both layouts, e.g. "avenue-2-17" (plot numbers on the sheets can repeat) */
   id: string;
-  number: number;
+  /** Plot number exactly as printed on the CAD sheet (can carry a leading zero or a "/1" suffix) */
+  number: string;
+  phaseId: PhaseId;
   areaSqYds: number; // Gajam (Sq. Yards)
   facing: Facing;
   roadWidthFt: number;
@@ -12,13 +17,13 @@ export interface Plot {
   isCorner: boolean;
   isVastuCompliant: boolean;
   pricePerSqYd: number;
+  /** Approximate frontage × depth in feet, measured from the drawing (regular plots only) */
   dimensionsFt?: string;
-  coordinates: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+  /** SVG path outlining the plot on the layout sheet (sheet coordinates) */
+  path: string;
+  /** Plot label position on the layout sheet (sheet coordinates) */
+  cx: number;
+  cy: number;
 }
 
 export interface Project {

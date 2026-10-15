@@ -189,7 +189,7 @@ export const GoldenCorridorMap: React.FC = () => {
                 Corridor Landmark Milestone
               </span>
               <p className="text-stone-300 font-light">
-                Directly accessible via all-weather 33-ft layout approach boulevards with direct access to NH-65.
+                Directly accessible via all-weather 30-ft layout approach roads with direct access to NH-65.
               </p>
             </div>
           </div>

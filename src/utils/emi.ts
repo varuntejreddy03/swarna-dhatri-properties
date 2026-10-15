@@ -1,15 +1,27 @@
 /**
- * Financial calculation helper for real estate plots
+ * Financial calculation helper for real estate plots.
+ *
+ * Payment structure (see data/paymentPlan.ts):
+ *   Booking token  ->  Down payment (within N days)  ->  Balance in EMIs (max 24 months)
+ *   or
+ *   Spot registration on 50% of the plot value (within N days)
  */
+import { PAYMENT_PLAN } from '../data/paymentPlan';
 
 export interface EmiResult {
   totalCost: number;
   bookingAmount: number;
   downPaymentAmount: number;
+  /** booking + down payment */
+  upfrontTotal: number;
+  /** balance to be paid through EMIs */
   loanAmount: number;
+  tenureMonths: number;
   monthlyEmi: number;
   totalInterest: number;
   totalPayable: number;
+  /** 50% of the plot value for the spot-registration route */
+  spotRegistrationAmount: number;
   totalCostWordsEn: string;
   monthlyEmiWordsEn: string;
 }
@@ -34,81 +46,85 @@ export function formatLakhsCrores(amount: number): string {
   return formatIndianCurrency(amount);
 }
 
+function emiFor(principal: number, annualInterestRate: number, months: number): number {
+  if (principal <= 0 || months <= 0) return 0;
+  const monthlyRate = annualInterestRate / 12 / 100;
+  if (monthlyRate <= 0) return principal / months;
+  const growth = Math.pow(1 + monthlyRate, months);
+  return (principal * monthlyRate * growth) / (growth - 1);
+}
+
 export function calculateEmi({
   areaSqYds,
   pricePerSqYd,
-  bookingAmount = 20000,
-  downPaymentPercent = 30,
-  annualInterestRate = 9.5,
-  tenureYears = 5
+  bookingAmount = PAYMENT_PLAN.bookingAmount,
+  downPaymentAmount: downPaymentInput = PAYMENT_PLAN.downPaymentAmount,
+  annualInterestRate = 0,
+  tenureMonths = PAYMENT_PLAN.maxEmiMonths
 }: {
   areaSqYds: number;
   pricePerSqYd: number;
   bookingAmount?: number;
-  downPaymentPercent?: number;
+  downPaymentAmount?: number;
   annualInterestRate?: number;
-  tenureYears?: number;
+  tenureMonths?: number;
 }): EmiResult {
   const totalCost = areaSqYds * pricePerSqYd;
-  const downPaymentAmount = Math.max(bookingAmount, (totalCost * downPaymentPercent) / 100);
-  const loanAmount = Math.max(0, totalCost - downPaymentAmount);
+  const months = Math.min(Math.max(1, Math.round(tenureMonths)), PAYMENT_PLAN.maxEmiMonths);
 
-  const monthlyRate = annualInterestRate / 12 / 100;
-  const months = tenureYears * 12;
+  const booking = Math.min(bookingAmount, totalCost);
+  const downPaymentAmount = Math.min(downPaymentInput, Math.max(0, totalCost - booking));
+  const upfrontTotal = booking + downPaymentAmount;
+  const loanAmount = Math.max(0, totalCost - upfrontTotal);
 
-  let monthlyEmi = 0;
-  if (loanAmount > 0 && monthlyRate > 0) {
-    monthlyEmi = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-  } else if (loanAmount > 0) {
-    monthlyEmi = loanAmount / months;
-  }
-
-  const totalPayable = downPaymentAmount + (monthlyEmi * months);
-  const totalInterest = Math.max(0, (monthlyEmi * months) - loanAmount);
-
-  const totalCostFormatted = formatLakhsCrores(totalCost);
-  const monthlyEmiFormatted = formatLakhsCrores(monthlyEmi);
+  const monthlyEmi = emiFor(loanAmount, annualInterestRate, months);
+  const totalInterest = Math.max(0, monthlyEmi * months - loanAmount);
+  const totalPayable = upfrontTotal + monthlyEmi * months;
 
   return {
     totalCost,
-    bookingAmount,
+    bookingAmount: booking,
     downPaymentAmount,
+    upfrontTotal,
     loanAmount,
+    tenureMonths: months,
     monthlyEmi: Math.round(monthlyEmi),
     totalInterest: Math.round(totalInterest),
     totalPayable: Math.round(totalPayable),
-    totalCostWordsEn: totalCostFormatted,
-    monthlyEmiWordsEn: monthlyEmiFormatted
+    spotRegistrationAmount: Math.round((totalCost * PAYMENT_PLAN.spotRegistrationPercent) / 100),
+    totalCostWordsEn: formatLakhsCrores(totalCost),
+    monthlyEmiWordsEn: formatLakhsCrores(monthlyEmi)
   };
 }
 
 export function calculatePlotSizeFromBudget({
   monthlyBudget,
-  pricePerSqYd = 3300,
-  downPaymentPercent = 30,
-  annualInterestRate = 9.5,
-  tenureYears = 5
+  pricePerSqYd = PAYMENT_PLAN.exampleRatePerSqYd,
+  annualInterestRate = 0,
+  tenureMonths = PAYMENT_PLAN.maxEmiMonths
 }: {
   monthlyBudget: number;
   pricePerSqYd?: number;
-  downPaymentPercent?: number;
   annualInterestRate?: number;
-  tenureYears?: number;
-}): { estimatedGajam: number; totalCost: number; downPayment: number } {
+  tenureMonths?: number;
+}): { estimatedGajam: number; totalCost: number; downPayment: number; upfrontTotal: number } {
+  const months = Math.min(Math.max(1, Math.round(tenureMonths)), PAYMENT_PLAN.maxEmiMonths);
   const monthlyRate = annualInterestRate / 12 / 100;
-  const months = tenureYears * 12;
-  
-  // Principal = EMI * ( (1+r)^n - 1 ) / ( r * (1+r)^n )
-  const loanAmount = (monthlyBudget * (Math.pow(1 + monthlyRate, months) - 1)) / (monthlyRate * Math.pow(1 + monthlyRate, months));
-  
-  // Total cost = Loan / (1 - downPaymentPercent/100)
-  const totalCost = loanAmount / (1 - (downPaymentPercent / 100));
-  const estimatedGajam = Math.round(totalCost / pricePerSqYd);
-  const downPayment = totalCost * (downPaymentPercent / 100);
+
+  // Principal financed by the EMI: P = EMI * ((1+r)^n - 1) / (r * (1+r)^n)
+  const financed =
+    monthlyRate > 0
+      ? (monthlyBudget * (Math.pow(1 + monthlyRate, months) - 1)) / (monthlyRate * Math.pow(1 + monthlyRate, months))
+      : monthlyBudget * months;
+
+  const upfrontTotal = PAYMENT_PLAN.bookingAmount + PAYMENT_PLAN.downPaymentAmount;
+  const totalCost = financed + upfrontTotal;
+  const estimatedGajam = Math.floor(totalCost / pricePerSqYd);
 
   return {
-    estimatedGajam: Math.max(100, estimatedGajam),
+    estimatedGajam: Math.max(0, estimatedGajam),
     totalCost: Math.round(totalCost),
-    downPayment: Math.round(downPayment)
+    downPayment: PAYMENT_PLAN.downPaymentAmount,
+    upfrontTotal
   };
 }

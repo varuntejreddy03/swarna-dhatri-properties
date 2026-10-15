@@ -16,16 +16,19 @@ import { isSpeechRecognitionSupported, startSpeechRecognition } from '../utils/v
 import { COMPANY } from '../data/company';
 
 export interface BookVisitFormProps {
-  prefilledPlot?: number;
+  /** Plot number as printed on the sheet, e.g. "12" */
+  prefilledPlot?: string;
+  /** Layout label, e.g. "Phase 2" */
+  prefilledPhase?: string;
 }
 
-export const BookVisitForm: React.FC<BookVisitFormProps> = ({ prefilledPlot }) => {
+export const BookVisitForm: React.FC<BookVisitFormProps> = ({ prefilledPlot, prefilledPhase }) => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('11:00 AM - 01:00 PM');
   const [pickupRequired, setPickupRequired] = useState(false);
-  const [notes, setNotes] = useState(prefilledPlot ? `Inquiring about Plot #${prefilledPlot}` : '');
+  const [notes, setNotes] = useState(prefilledPlot ? `Inquiring about Plot #${prefilledPlot}${prefilledPhase ? ` (${prefilledPhase})` : ''}` : '');
   const [isTuesdaySelected, setIsTuesdaySelected] = useState(false);
   const [isListening, setIsListening] = useState(false);
 

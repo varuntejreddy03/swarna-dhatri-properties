@@ -18,8 +18,8 @@ export const SITE_PHOTOS: SitePhoto[] = [
     thumb: '/enhanced-site-photos/site-photo-1.webp',
     title: 'Boulevard Boundary & Kerb Demarcation',
     category: 'groundwork',
-    caption: 'Finished internal 33-foot layout road level with stone markers and precast kerbing alignment in progress.',
-    highlight: '33 Ft Boulevard'
+    caption: 'Finished internal 30-foot layout road level with stone markers and precast kerbing alignment in progress.',
+    highlight: '30 Ft Road'
   },
   {
     id: 'photo-2',

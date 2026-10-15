@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { calculateEmi, calculatePlotSizeFromBudget, formatIndianCurrency, formatLakhsCrores } from '../utils/emi';
-import { Calculator, ArrowRightLeft, Sparkles, HelpCircle, CheckCircle2, TrendingUp, ShieldCheck } from 'lucide-react';
+import { calculateEmi, calculatePlotSizeFromBudget, formatIndianCurrency } from '../utils/emi';
+import { EMI_TENURE_OPTIONS_MONTHS, PAYMENT_PLAN } from '../data/paymentPlan';
+import { CheckCircle2, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const EmiCalculator: React.FC = () => {
@@ -8,25 +9,23 @@ export const EmiCalculator: React.FC = () => {
   const [activeMode, setActiveMode] = useState<'standard' | 'reverse'>('standard');
 
   // Standard Mode Inputs
-  const [areaSqYds, setAreaSqYds] = useState<number>(200);
-  const [pricePerSqYd, setPricePerSqYd] = useState<number>(3300);
-  const [downPaymentPercent, setDownPaymentPercent] = useState<number>(30);
-  const [tenureYears, setTenureYears] = useState<number>(5);
-  const [interestRate, setInterestRate] = useState<number>(9.5);
+  const [areaSqYds, setAreaSqYds] = useState<number>(PAYMENT_PLAN.standardPlotSqYd);
+  const [pricePerSqYd, setPricePerSqYd] = useState<number>(PAYMENT_PLAN.exampleRatePerSqYd);
+  const [tenureMonths, setTenureMonths] = useState<number>(PAYMENT_PLAN.maxEmiMonths);
+  const [interestRate, setInterestRate] = useState<number>(0);
 
   // Reverse Mode Inputs
-  const [monthlyBudget, setMonthlyBudget] = useState<number>(15000);
+  const [monthlyBudget, setMonthlyBudget] = useState<number>(10000);
 
   // Standard calculation
   const emiData = useMemo(() => {
     return calculateEmi({
       areaSqYds,
       pricePerSqYd,
-      downPaymentPercent,
       annualInterestRate: interestRate,
-      tenureYears
+      tenureMonths
     });
-  }, [areaSqYds, pricePerSqYd, downPaymentPercent, tenureYears, interestRate]);
+  }, [areaSqYds, pricePerSqYd, tenureMonths, interestRate]);
 
   // Projected 3-year capital appreciation at conservative 18% CAGR for Zaheerabad NIMZ
   const projectedAppreciation = useMemo(() => {
@@ -41,11 +40,10 @@ export const EmiCalculator: React.FC = () => {
     return calculatePlotSizeFromBudget({
       monthlyBudget,
       pricePerSqYd,
-      downPaymentPercent,
       annualInterestRate: interestRate,
-      tenureYears
+      tenureMonths
     });
-  }, [monthlyBudget, pricePerSqYd, downPaymentPercent, tenureYears, interestRate]);
+  }, [monthlyBudget, pricePerSqYd, tenureMonths, interestRate]);
 
   return (
     <div className="w-full bg-white rounded-3xl border border-stone-200/90 shadow-[0_15px_50px_-10px_rgba(0,0,0,0.08)] overflow-hidden">
@@ -58,7 +56,7 @@ export const EmiCalculator: React.FC = () => {
                 Financial Advisory Tool
               </span>
               <span className="text-xs text-stone-300 font-light">
-                • ₹20,000 Reservation Token Advance
+                • ₹{PAYMENT_PLAN.bookingAmount.toLocaleString('en-IN')} Booking · EMI up to {PAYMENT_PLAN.maxEmiMonths} months
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold font-serif text-white mt-1.5">
@@ -114,17 +112,17 @@ export const EmiCalculator: React.FC = () => {
                 </div>
                 <input
                   type="range"
-                  min={100}
-                  max={600}
-                  step={25}
+                  min={75}
+                  max={250}
+                  step={1}
                   value={areaSqYds}
                   onChange={(e) => setAreaSqYds(Number(e.target.value))}
                   className="w-full accent-[#C89732] cursor-pointer"
                 />
                 <div className="flex justify-between text-[11px] text-stone-400 mt-1">
-                  <span>100 Gajam (Min)</span>
-                  <span className="text-[#C89732] font-semibold">Popular: 150 / 200 / 300 Gajam</span>
-                  <span>600 Gajam (Estate)</span>
+                  <span>75 Gajam</span>
+                  <span className="text-[#C89732] font-semibold">Standard plot: ~{PAYMENT_PLAN.standardPlotSqYd} Gajam · {PAYMENT_PLAN.roadWidthFt} ft road</span>
+                  <span>250 Gajam</span>
                 </div>
               </div>
 
@@ -148,7 +146,7 @@ export const EmiCalculator: React.FC = () => {
                         : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
                     }`}
                   >
-                    ₹3,300 (Avenue-2)
+                    ₹3,300 (Phase 2)
                   </button>
                   <button
                     type="button"
@@ -159,7 +157,7 @@ export const EmiCalculator: React.FC = () => {
                         : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
                     }`}
                   >
-                    ₹4,000 (West Facing)
+                    ₹4,000 (Ph.1 West)
                   </button>
                   <button
                     type="button"
@@ -170,56 +168,52 @@ export const EmiCalculator: React.FC = () => {
                         : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
                     }`}
                   >
-                    ₹4,500 (East Facing)
+                    ₹4,500 (Ph.1 East)
                   </button>
                 </div>
               </div>
 
-              {/* Down Payment % Slider */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                    Down Payment Percentage:
-                  </label>
-                  <span className="text-base font-bold font-serif text-[#0A1C16]">
-                    {downPaymentPercent}% <span className="text-xs font-sans text-stone-500 font-normal">({formatIndianCurrency((areaSqYds * pricePerSqYd * downPaymentPercent) / 100)})</span>
+              {/* Fixed upfront payments */}
+              <div className="p-4 rounded-2xl bg-white border border-stone-200 space-y-2 text-xs">
+                <span className="text-xs font-bold uppercase tracking-wider text-stone-700 block">
+                  Upfront Payments (fixed):
+                </span>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Booking token</span>
+                  <span className="font-mono font-bold text-amber-600">
+                    {formatIndianCurrency(PAYMENT_PLAN.bookingAmount)}
                   </span>
                 </div>
-                <input
-                  type="range"
-                  min={20}
-                  max={80}
-                  step={5}
-                  value={downPaymentPercent}
-                  onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
-                  className="w-full accent-[#C89732] cursor-pointer"
-                />
-                <div className="flex justify-between text-[11px] text-stone-400 mt-1">
-                  <span>20% (Minimum)</span>
-                  <span className="text-emerald-700 font-bold">50% Spot Registration Threshold</span>
-                  <span>80%</span>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Down payment (within {PAYMENT_PLAN.downPaymentDays} days)</span>
+                  <span className="font-mono font-bold text-stone-800">
+                    {formatIndianCurrency(PAYMENT_PLAN.downPaymentAmount)}
+                  </span>
                 </div>
+                <p className="text-[11px] text-emerald-700 font-semibold">
+                  Or pay {PAYMENT_PLAN.spotRegistrationPercent}% within {PAYMENT_PLAN.spotRegistrationDays} days and register the plot.
+                </p>
               </div>
 
-              {/* Tenure (Years) */}
+              {/* Tenure (months) */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-2">
-                    Tenure: {tenureYears} Years
+                    EMI Tenure: {tenureMonths} Months <span className="text-stone-400 normal-case font-normal">(max {PAYMENT_PLAN.maxEmiMonths})</span>
                   </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {[3, 5, 7].map((yr) => (
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {EMI_TENURE_OPTIONS_MONTHS.map((m) => (
                       <button
-                        key={yr}
+                        key={m}
                         type="button"
-                        onClick={() => setTenureYears(yr)}
+                        onClick={() => setTenureMonths(m)}
                         className={`py-2 rounded-xl text-xs font-bold border transition-all ${
-                          tenureYears === yr
+                          tenureMonths === m
                             ? 'bg-[#0A1C16] text-[#D4A84D] border-[#0A1C16]'
                             : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-50'
                         }`}
                       >
-                        {yr} Yrs
+                        {m}
                       </button>
                     ))}
                   </div>
@@ -227,20 +221,20 @@ export const EmiCalculator: React.FC = () => {
 
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-2">
-                    Annual Interest Rate: {interestRate}%
+                    Interest (if any): {interestRate}%
                   </label>
                   <input
                     type="range"
-                    min={8.0}
-                    max={12.0}
-                    step={0.25}
+                    min={0}
+                    max={12}
+                    step={0.5}
                     value={interestRate}
                     onChange={(e) => setInterestRate(Number(e.target.value))}
                     className="w-full accent-[#C89732] cursor-pointer mt-2"
                   />
                   <div className="flex justify-between text-[11px] text-stone-400 mt-1">
-                    <span>8.0%</span>
-                    <span>12.0%</span>
+                    <span>0%</span>
+                    <span>12%</span>
                   </div>
                 </div>
               </div>
@@ -259,17 +253,17 @@ export const EmiCalculator: React.FC = () => {
                 </div>
                 <input
                   type="range"
-                  min={8000}
-                  max={50000}
-                  step={1000}
+                  min={3000}
+                  max={40000}
+                  step={500}
                   value={monthlyBudget}
                   onChange={(e) => setMonthlyBudget(Number(e.target.value))}
                   className="w-full accent-[#C89732] cursor-pointer"
                 />
                 <div className="flex justify-between text-[11px] text-stone-400 mt-1">
-                  <span>₹8,000 / mo</span>
-                  <span className="text-[#C89732] font-semibold">Typical Budget: ₹12,000 - ₹25,000</span>
-                  <span>₹50,000 / mo</span>
+                  <span>₹3,000 / mo</span>
+                  <span className="text-[#C89732] font-semibold">Over {tenureMonths} months after the ₹{(PAYMENT_PLAN.bookingAmount + PAYMENT_PLAN.downPaymentAmount).toLocaleString('en-IN')} upfront</span>
+                  <span>₹40,000 / mo</span>
                 </div>
               </div>
 
@@ -284,15 +278,15 @@ export const EmiCalculator: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-stone-600">Total Plot Consideration (@ ₹3,300/yd):</span>
+                  <span className="text-stone-600">Total Plot Consideration (@ ₹{pricePerSqYd.toLocaleString('en-IN')}/yd):</span>
                   <span className="font-mono font-bold text-stone-900">
                     ₹{reverseData.totalCost.toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between text-xs">
-                  <span className="text-stone-600">Estimated Down Payment ({downPaymentPercent}%):</span>
+                  <span className="text-stone-600">Booking + Down Payment (upfront):</span>
                   <span className="font-mono font-bold text-emerald-700">
-                    ₹{reverseData.downPayment.toLocaleString('en-IN')}
+                    ₹{reverseData.upfrontTotal.toLocaleString('en-IN')}
                   </span>
                 </div>
               </div>
@@ -322,7 +316,7 @@ export const EmiCalculator: React.FC = () => {
                 <span className="text-xs font-sans text-stone-300 font-normal ml-1">/ month</span>
               </div>
               <p className="text-[11px] text-stone-300 font-light">
-                For a tenure of {tenureYears} years @ {interestRate}% p.a.
+                Balance paid over {emiData.tenureMonths} months{interestRate > 0 ? ` @ ${interestRate}% p.a.` : ''}
               </p>
             </div>
 
@@ -335,27 +329,29 @@ export const EmiCalculator: React.FC = () => {
                 </span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-stone-100">
-                <span className="text-stone-500">Reservation Advance Token:</span>
+                <span className="text-stone-500">Booking Token:</span>
                 <span className="font-bold text-amber-600 font-mono">
-                  ₹20,000 only
+                  {formatIndianCurrency(emiData.bookingAmount)}
                 </span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-stone-100">
-                <span className="text-stone-500">Down Payment ({downPaymentPercent}%):</span>
+                <span className="text-stone-500">Down Payment (within {PAYMENT_PLAN.downPaymentDays} days):</span>
                 <span className="font-bold text-stone-800 font-mono">
                   {formatIndianCurrency(emiData.downPaymentAmount)}
                 </span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-stone-100">
-                <span className="text-stone-500">Loan / Balance Financed:</span>
+                <span className="text-stone-500">Balance in EMI ({emiData.tenureMonths} months):</span>
                 <span className="font-bold text-stone-800 font-mono">
                   {formatIndianCurrency(emiData.loanAmount)}
                 </span>
               </div>
               <div className="flex justify-between py-1.5">
-                <span className="text-stone-500">Spot Registration (50% Payment):</span>
+                <span className="text-stone-500">
+                  Or {PAYMENT_PLAN.spotRegistrationPercent}% Registration (within {PAYMENT_PLAN.spotRegistrationDays} days):
+                </span>
                 <span className="font-bold text-emerald-700 font-mono">
-                  {formatIndianCurrency(emiData.totalCost * 0.5)}
+                  {formatIndianCurrency(emiData.spotRegistrationAmount)}
                 </span>
               </div>
             </div>

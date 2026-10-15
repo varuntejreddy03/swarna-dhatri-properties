@@ -50,7 +50,7 @@ const VASTU_DATA: VastuDirection[] = [
     rulingDeity: 'Lord Varuna (Preserver of Order)',
     element: 'Air / Stability',
     description: 'Associated with enduring fame, stable commercial enterprise, and long-term administrative success.',
-    recommendation: 'Favored for executive homes and commercial frontage along 33-ft boulevards.',
+    recommendation: 'Favored for executive homes and commercial frontage along 30-ft roads.',
     rating: 'Stability & Success'
   },
   {

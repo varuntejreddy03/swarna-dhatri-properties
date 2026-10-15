@@ -59,7 +59,7 @@
 ### 4. Typed Data Models (`src/data/`)
 - `company.ts`: Address, coordinates, phone (+91 63048 04450), email, IST hours (10 AM - 6 PM), Tuesday holiday flag.
 - `projects.ts`: Project specifications for Swarna Bindu Avenue-2 and Phase 1, pricing, amenities, and disclaimers.
-- `plots.sample.ts`: 42 sample plots with coordinates, dimensions, facing, road width, and status.
+- `layouts.ts` / `layoutPlots.generated.ts` / `plotStatus.ts`: the real Phase 1 (52 plots) and Phase 2 (244 labelled plots) read from the approved CAD sheets, with facing, road width and status.
 - `landmarks.ts`: Major industrial hubs along the NH-65 corridor.
 - `nimz.ts`: Historical background and enterprise investments in the 12,635-acre zone.
 - `faqs.ts` & `offers.ts`: FAQs, document vault items, and festival booking coupon parameters.

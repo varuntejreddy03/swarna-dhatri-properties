@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { PROJECTS } from '../data/projects';
 import { PlotExplorer } from '../components/PlotExplorer';
 import { EmiCalculator } from '../components/EmiCalculator';
+import { PaymentPlan } from '../components/PaymentPlan';
 import { BookVisitForm } from '../components/BookVisitForm';
 import { DocumentTrustVault } from '../components/DocumentTrustVault';
 import { 
@@ -240,9 +241,9 @@ export const ProjectDetailPage: React.FC = () => {
       {/* Embedded CAD Masterplan Explorer */}
       <div className="no-print space-y-4">
         <h3 className="text-2xl sm:text-3xl font-bold font-serif text-[#0A1C16]">
-          Interactive Masterplan CAD Explorer
+          Approved Layout Plan Explorer
         </h3>
-        <PlotExplorer />
+        <PlotExplorer initialPhase={project.id === 'avenue-1' ? 'avenue-1' : 'avenue-2'} />
       </div>
 
       {/* Embedded Clear Title Vault */}
@@ -250,8 +251,9 @@ export const ProjectDetailPage: React.FC = () => {
         <DocumentTrustVault />
       </div>
 
-      {/* Embedded EMI Calculator */}
-      <div className="no-print">
+      {/* Payment plan + EMI Calculator */}
+      <div className="no-print space-y-8">
+        <PaymentPlan pricePerSqYd={project.pricePerSqYdWest ?? project.pricePerSqYd} />
         <EmiCalculator />
       </div>
     </div>

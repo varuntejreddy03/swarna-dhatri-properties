@@ -7,6 +7,8 @@ import { MapPin, Phone, Clock, Calendar, CheckCircle2, ShieldCheck, Car } from '
 export const BookVisitPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const plot = searchParams.get('plot');
+  const phaseParam = searchParams.get('phase');
+  const phaseLabel = phaseParam === 'avenue-1' ? 'Phase 1' : phaseParam === 'avenue-2' ? 'Phase 2' : undefined;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-14">
@@ -19,14 +21,14 @@ export const BookVisitPage: React.FC = () => {
           Schedule Your VIP Site Inspection
         </h1>
         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
-          Experience ground reality firsthand before making a financial commitment. Walk the 33-ft boulevards, review red sandalwood trees, and inspect boundary markers. Complimentary AC chauffeur pickup arranged from Miyapur (Wed–Mon).
+          Experience ground reality firsthand before making a financial commitment. Walk the 30-ft roads, review red sandalwood trees, and inspect boundary markers. Complimentary AC chauffeur pickup arranged from Miyapur (Wed–Mon).
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Booking Form */}
         <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-stone-200 shadow-sm">
-          <BookVisitForm prefilledPlot={plot ? Number(plot) : undefined} />
+          <BookVisitForm prefilledPlot={plot ?? undefined} prefilledPhase={phaseLabel} />
         </div>
 
         {/* Guidelines & Office Details */}

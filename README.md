@@ -40,7 +40,11 @@ All core business data is separated into cleanly typed files in `src/data/`:
 | :--- | :--- | :--- |
 | `src/data/company.ts` | Contact info, address, office hours, RERA status | Edit phone, email, hours, or address coordinates |
 | `src/data/projects.ts` | Project phases, pricing, amenities, highlights | Update `pricePerSqYd`, booking tokens, or highlights |
-| `src/data/plots.sample.ts` | Individual plot dimensions, facings, statuses | Adjust plot coordinates, status (`available`/`booked`/`hold`) |
+| `src/data/layouts.ts` | Phase 1 / Phase 2 layout metadata (rates, land analysis, sheet viewBox) | Change rates or sheet details |
+| `src/data/layoutPlots.generated.ts` | Every plot (number, area, facing, outline) read from the approved CAD sheets | Generated from the PDFs — don't hand-edit |
+| `src/data/plotStatus.ts` | Live inventory overrides (`available`/`booked`/`hold`) keyed by plot id | Mark plots as booked / on hold |
+| `src/data/paymentPlan.ts` | Booking ₹20,000, ₹1,50,000 down payment in 10 days, EMI max 24 months, 50% registration | Change payment terms once, everywhere |
+| `public/layouts/*.svg` | Vector copies of the two approved layout sheets (Phase 1 & Phase 2) | Replace when a new sheet is approved |
 | `src/data/offers.ts` | Festival coupon campaigns & terms | Update prize ranges, start/end dates, and rules |
 | `src/data/landmarks.ts` | Industrial landmarks along NH-65 corridor | Add or adjust distances and coordinates |
 | `src/data/nimz.ts` | NIMZ facts, government timelines, corporate MoUs | Add new industrial investments or gazettes |
